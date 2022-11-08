@@ -3,4 +3,5 @@ pinatapy-vourhey==0.1.3
 aenum==3.1.11
 http3==0.6.7
 tenacity==8.0.1
-./wheels/*
+https://wheels.home-assistant.io/musllinux/cffi-1.15.1-cp310-cp310-musllinux_1_2_aarch64.whl
+https://wheels.home-assistant.io/musllinux/pycryptodome-3.14.1-cp35-abi3-musllinux_1_2_aarch64.whl

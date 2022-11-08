@@ -5,7 +5,7 @@
     "documentation": "https://wiki.robonomics.network/en/",
     "dependencies": ["recorder", "lovelace"],
     "issue_tracker": "https://github.com/airalab/homeassistant-robonomics-integration/issues",
-    "requirements": ["https://wheels.home-assistant.io/musllinux/cffi-1.15.1-cp310-cp310-musllinux_1_2_aarch64.whl","https://wheels.home-assistant.io/musllinux/pycryptodome-3.14.1-cp35-abi3-musllinux_1_2_aarch64.whl","wheel", "robonomics-interface==1.3.6", "pinatapy-vourhey==0.1.3", "aenum==3.1.11", "ipfs-api==0.2.3"],
+    "requirements": ["https://wheels.home-assistant.io/musllinux/cffi-1.15.1-cp310-cp310-musllinux_1_2_aarch64.whl#cffi==1.15.1","https://wheels.home-assistant.io/musllinux/pycryptodome-3.15.0-cp35-abi3-musllinux_1_2_aarch64.whl#pycryptodome==3.15.0","wheel", "robonomics-interface==1.3.6", "pinatapy-vourhey==0.1.3", "aenum==3.1.11", "ipfs-api==0.2.3"],
     "codeowners": ["@airalab"],
     "iot_class": "cloud_push",
     "version": "1.0.0"
