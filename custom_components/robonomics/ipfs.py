@@ -275,9 +275,13 @@ def _upload_to_crust(hass: HomeAssistant, ipfs_hash: str, file_size: int) -> tp.
     @return: result of extrinsic
     """
     seed: str = hass.data[DOMAIN][CONF_ADMIN_SEED]
-    mainnet = Mainnet(seed=seed)
-    file_stored = mainnet.store_file(ipfs_hash, file_size)
-    _LOGGER.debug(file_stored)
+    try:
+        mainnet = Mainnet(seed=seed)
+        file_stored = mainnet.store_file(ipfs_hash, file_size)
+        _LOGGER.debug(file_stored)
+    except Exception as e:
+        _LOGGER.debug(f"error while uploading file to crust - {e}")
+        return e
     return file_stored
 
 
