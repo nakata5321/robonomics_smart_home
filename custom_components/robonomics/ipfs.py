@@ -276,7 +276,7 @@ def _upload_to_crust(hass: HomeAssistant, ipfs_hash: str, file_size: int) -> tp.
     """
     seed: str = hass.data[DOMAIN][CONF_ADMIN_SEED]
     try:
-        mainnet = Mainnet(seed=seed)
+        mainnet = Mainnet(seed=seed, crypto_type=0)
         file_stored = mainnet.store_file(ipfs_hash, file_size)
         _LOGGER.debug(file_stored)
     except Exception as e:
