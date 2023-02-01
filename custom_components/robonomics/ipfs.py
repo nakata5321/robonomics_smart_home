@@ -264,6 +264,23 @@ def add_to_custom_gateway(
     return ipfs_hash, ipfs_file_size
 
 
+@to_thread
+def _upload_to_crust(hass: HomeAssistant, ipfs_hash: str, file_size: int) -> tp.Tuple[str, str]:
+    """
+    Place an order in Crust neetwork
+
+    @param hass: home Assistant instance
+    @param ipfs_hash: IPFS hash of file, which you want to store
+    @param file_size: size of file in IPFS in bytes
+    @return: result of extrinsic
+    """
+    seed: str = hass.data[DOMAIN][CONF_ADMIN_SEED]
+    mainnet = Mainnet(seed=seed)
+    file_stored = mainnet.store_file(ipfs_hash, file_size)
+    _LOGGER.debug(file_stored)
+    return file_stored
+
+
 async def add_telemetry_to_ipfs(hass: HomeAssistant, filename: str) -> tp.Optional[str]:
     pin = await check_if_need_pin_telemetry(filename)
     if not pin:
@@ -271,10 +288,12 @@ async def add_telemetry_to_ipfs(hass: HomeAssistant, filename: str) -> tp.Option
     else:
         last_file_hash = None
         last_file_name = None
-    res, _ = await add_to_ipfs(
+    ipfs_hash, size = await add_to_ipfs(
         hass, filename, IPFS_TELEMETRY_PATH, pin, last_file_hash, last_file_name
     )
-    return res
+    await _upload_to_crust(hass, ipfs_hash, size)
+
+    return ipfs_hash
 
 
 async def add_config_to_ipfs(hass: HomeAssistant, filename: str) -> tp.Optional[str]:
@@ -283,10 +302,12 @@ async def add_config_to_ipfs(hass: HomeAssistant, filename: str) -> tp.Optional[
     if new_hash == last_file_hash:
         _LOGGER.debug(f"Last config hash and the current are the same: {last_file_hash}")
         return last_file_hash
-    res, _ = await add_to_ipfs(
+    ipfs_hash, size = await add_to_ipfs(
         hass, filename, IPFS_CONFIG_PATH, False, last_file_hash, last_file_name
     )
-    return res
+    await _upload_to_crust(hass, ipfs_hash, size)
+
+    return ipfs_hash
 
 
 async def add_backup_to_ipfs(hass: HomeAssistant, filename: str) -> tp.Optional[str]:
@@ -298,10 +319,8 @@ async def add_backup_to_ipfs(hass: HomeAssistant, filename: str) -> tp.Optional[
     ipfs_hash, size = await add_to_ipfs(
         hass, filename, IPFS_BACKUP_PATH, False, last_file_hash, last_file_name
     )
-    seed: str = hass.data[DOMAIN][CONF_ADMIN_SEED]
-    mainnet = Mainnet(seed=seed)
-    file_stored = mainnet.store_file(ipfs_hash, size)
-    _LOGGER.debug(file_stored)
+    await _upload_to_crust(hass, ipfs_hash, size)
+
     return ipfs_hash
 
 
