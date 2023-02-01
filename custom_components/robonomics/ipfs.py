@@ -21,7 +21,7 @@ from pathlib import Path
 import ipfshttpclient2
 import io
 from datetime import datetime, timedelta
-from crust_file_uploader import Mainnet
+from crustinterface import Mainnet
 
 
 _LOGGER = logging.getLogger(__name__)
