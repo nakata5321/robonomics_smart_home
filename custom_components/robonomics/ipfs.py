@@ -267,7 +267,7 @@ def add_to_custom_gateway(
 @to_thread
 def _upload_to_crust(hass: HomeAssistant, ipfs_hash: str, file_size: int) -> tp.Tuple[str, str]:
     """
-    Place an order in Crust neetwork
+    Place an order in Crust network
 
     @param hass: home Assistant instance
     @param ipfs_hash: IPFS hash of file, which you want to store
@@ -276,6 +276,7 @@ def _upload_to_crust(hass: HomeAssistant, ipfs_hash: str, file_size: int) -> tp.
     """
     seed: str = hass.data[DOMAIN][CONF_ADMIN_SEED]
     try:
+        _LOGGER.debug(f"Start adding {ipfs_hash} to crust with size {file_size}")
         mainnet = Mainnet(seed=seed, crypto_type=0)
         file_stored = mainnet.store_file(ipfs_hash, file_size)
         _LOGGER.debug(file_stored)
