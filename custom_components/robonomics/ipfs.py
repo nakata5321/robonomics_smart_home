@@ -152,7 +152,7 @@ def add_to_local_node(
     pin: bool,
     path: str,
     last_file_name: tp.Optional[str] = None,
-) -> tp.Optional[str]:
+) -> tp.Tuple[tp.Optional[str], tp.Optional[str]]:
     try:
         _LOGGER.debug(f"Start adding {filename} to local node, pin: {pin}")
         with ipfshttpclient2.connect() as client:
@@ -174,6 +174,7 @@ def add_to_local_node(
     except Exception as e:
         _LOGGER.error(f"Exception in add to local node: {e}")
         ipfs_hash = None
+        ipfs_file_size = None
     return ipfs_hash, ipfs_file_size
 
 
@@ -184,7 +185,7 @@ def add_to_pinata(
     pinata: PinataPy,
     pin: bool,
     last_file_hash: tp.Optional[str] = None,
-) -> tp.Optional[str]:
+) -> tp.Tuple[tp.Optional[str], tp.Optional[str]]:
     _LOGGER.debug(f"Start adding {filename} to Pinata, pin: {pin}")
     try:
         res = pinata.pin_file_to_ipfs(filename)
@@ -193,7 +194,7 @@ def add_to_pinata(
         _LOGGER.debug(f"File {filename} was added to Pinata with cid: {ipfs_hash}")
     except Exception as e:
         _LOGGER.error(f"Exception in pinata pin: {e}, pinata response: {res}")
-        return None
+        return None, None
     if not pin:
         try:
             pinata.remove_pin_from_ipfs(last_file_hash)
@@ -214,7 +215,7 @@ def add_to_custom_gateway(
     pin: bool,
     seed: str = None,
     last_file_hash: tp.Optional[str] = None,
-) -> tp.Optional[str]:
+) -> tp.Tuple[tp.Optional[str], tp.Optional[str]]:
     if "https://" in url:
         url = url[8:]
     if url[-1] == "/":
@@ -260,7 +261,7 @@ def add_to_custom_gateway(
                     _LOGGER.debug(f"Hash {last_file_hash} was unpinned from {url}")
     except Exception as e:
         _LOGGER.error(f"Exception in pinning to custom gateway: {e}")
-        return None
+        return None, None
     return ipfs_hash, ipfs_file_size
 
 
