@@ -266,9 +266,9 @@ def add_to_custom_gateway(
 
 
 @to_thread
-def _upload_to_crust(hass: HomeAssistant, ipfs_hash: str, file_size: int) -> tp.Tuple[str, str]:
+def _upload_to_crust(hass: HomeAssistant, ipfs_hash: str, file_size: int) -> tp.Optional[tp.Tuple[str, str]]:
     """
-    Place an order in Crust network
+    Call extrinsic "Place an order" in Crust network
 
     @param hass: home Assistant instance
     @param ipfs_hash: IPFS hash of file, which you want to store
@@ -276,9 +276,26 @@ def _upload_to_crust(hass: HomeAssistant, ipfs_hash: str, file_size: int) -> tp.
     @return: result of extrinsic
     """
     seed: str = hass.data[DOMAIN][CONF_ADMIN_SEED]
+    mainnet = Mainnet(seed=seed, crypto_type=KeypairType.ED25519)
+    try:
+        # Check balance
+        balance = mainnet.get_balance()
+        _LOGGER.debug(f"Actual balance in crust network - {balance}")
+
+        # Check price in Main net. Price in pCRUs
+        price = mainnet.get_appx_store_price(file_size)
+        _LOGGER.debug(f"approximate cost to store the file - {price}")
+
+    except Exception as e:
+        _LOGGER.debug(f"error while get account balance - {e}")
+        return e
+
+    if price >= balance:
+        _LOGGER.error(f"Not enough account balance to store the file")
+        return None
+
     try:
         _LOGGER.debug(f"Start adding {ipfs_hash} to crust with size {file_size}")
-        mainnet = Mainnet(seed=seed, crypto_type=0)
         file_stored = mainnet.store_file(ipfs_hash, file_size)
         _LOGGER.debug(file_stored)
     except Exception as e:
