@@ -150,10 +150,10 @@ async def _validate_config(hass: HomeAssistant, data: dict[str, Any]) -> dict[st
         raise InvalidSubOwnerAddress
     if not await _has_sub_owner_subscription(hass, data[CONF_SUB_OWNER_ADDRESS]):
         raise NoSubscription
-    if not await _is_sub_admin_in_subscription(
-        hass, data[CONF_ADMIN_SEED], data[CONF_SUB_OWNER_ADDRESS]
-    ):
-        raise ControllerNotInDevices
+    #if not await _is_sub_admin_in_subscription(
+    #    hass, data[CONF_ADMIN_SEED], data[CONF_SUB_OWNER_ADDRESS]
+    #):
+    #    raise ControllerNotInDevices
     if not await _is_ipfs_local_connected():
         raise CantConnectToIPFS
 

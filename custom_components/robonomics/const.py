@@ -35,8 +35,7 @@ CRUST_GATEWAY_1 = "https://ipfs.living/ipfs/"
 CRUST_GATEWAY_2 = "https://crustipfs.live/ipfs/"
 
 ROBONOMICS_WSS = [
-    "wss://kusama.rpc.robonomics.network/",
-    "wss://robonomics.0xsamsara.com/",
+    "ws://127.0.0.1:9944",
 ]
 
 SENDING_TIMEOUT = "sending_timeout"

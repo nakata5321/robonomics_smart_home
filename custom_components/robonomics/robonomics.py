@@ -322,13 +322,13 @@ class Robonomics:
         """
 
         _LOGGER.debug("Start handle launch")
-        if data[2] == LAUNCH_REGISTRATION_COMMAND:
+        if data[1] == LAUNCH_REGISTRATION_COMMAND:
             _LOGGER.debug(f"Got registration request from {data[0]}")
             await UserManager(self.hass).create_user(data[0])
             return
         self.hass.data[DOMAIN][HANDLE_IPFS_REQUEST] = True
         try:
-            ipfs_hash = ipfs_32_bytes_to_qm_hash(data[2])
+            ipfs_hash = ipfs_32_bytes_to_qm_hash(data[1])
             result = await get_ipfs_data(
                 self.hass, ipfs_hash
             )  # {'platform': 'light', 'name', 'turn_on', 'params': {'entity_id': 'light.lightbulb'}}
@@ -730,11 +730,11 @@ class Robonomics:
         """
 
         try:
-            # _LOGGER.debug(f"Data from subscription callback: {data}")
+            _LOGGER.debug(f"Data from subscription callback: {data}")
             if (
-                isinstance(data[1], str) and data[1] == self.controller_address
+                isinstance(data[1], str) and data[0] == self.controller_address
             ):  ## Launch
-                if data[0] in self.devices_list or data[0] == self.controller_address:
+                if True:
                     asyncio.run_coroutine_threadsafe(
                         self._handle_launch(data), self.hass.loop
                     )
